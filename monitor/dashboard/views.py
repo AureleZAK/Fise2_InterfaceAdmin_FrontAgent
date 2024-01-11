@@ -1,32 +1,73 @@
+"""Views for the Dashboard application in the 'monitor' Django project.
+
+This module contains the views for the Dashboard application. Views are responsible for processing 
+incoming requests, preparing data for the templates, and returning responses to the client.
+"""
 # Create your views here.
 # dashboard/views.py
 from django.http import HttpResponse
 from django.shortcuts import render
-from .models import ServerData
 import plotly.express as px
 import pandas as pd
 import requests
-
+from .models import ServerData
 
 def dashboard(request):
+    """
+    View for the dashboard page of the Dashboard app.
+
+    Retrieves data from ServerData models and renders it to the 'dashboard/dashboard.html' template.
+    """
     data_points = ServerData.objects.all()  # Récupérez les données depuis la base de données
     return render(request, 'dashboard/dashboard.html', {'data_points': data_points})
 
 def home(request):
+    """
+    View function for the home page of the Dashboard app.
+
+    This function renders and returns the home page template of the Dashboard application.
+    It currently does not process any data or context for the template.
+
+    Args:
+        request: The HTTP request object.
+
+    Returns:
+        HttpResponse: The rendered home page of the Dashboard app.
+    """
     return render(request, 'dashboard/home.html')
-def my_view(request):
+def my_view():
+    """
+    Example view function showcasing a simple response.
+
+    This function represents a basic example of a Django view. 
+    It returns a simple HttpResponse with a greeting message. 
+    This function can be used as a template for more complex views.
+
+    Returns:
+        HttpResponse: A simple HttpResponse with a greeting message.
+    """
     # votre logique de vue ici
     return HttpResponse("Hello, this is my view!")
-# views.py
-
-# views.py
-
-
 
 def pie_chart(request):
+    """
+    View function to generate and display a pie chart.
+
+    This function fetches data from an external API, 
+    processes the data to create a pie chart using Plotly Express,
+    and then renders the chart on a webpage. In case of an HTTP request exception, 
+    the function handles 
+    the error and returns an error message.
+
+    Args:
+        request: The HTTP request object.
+
+    Returns:
+        HttpResponse: The rendered web page with the pie chart or an error message.
+    """
     # Fake values for the pie chart (replace with your own data)
     #api_url = "http://localhost:8081/metrics/v1/log"
-    api_url = ("http://lancelot.telecomste.net:8080/metrics/v1/log")
+    api_url = "http://lancelot.telecomste.net:8080/metrics/v1/log"
 
     try:
         response = requests.get(api_url)
@@ -45,11 +86,15 @@ def pie_chart(request):
         graph_html = fig.to_html(full_html=False)
 
         # Render the page with the chart
-        return render(request, 'dashboard/pie_chart.html', {'graph_html': graph_html, 'api_data': api_data})
+        return render(
+    request,
+    'dashboard/pie_chart.html',
+    {
+        'graph_html': graph_html,
+        'api_data': api_data
+    }
+)
     except requests.RequestException as e:
         # Print the exception to the console for debugging
         print(f"Error in get_api_data: {str(e)}")
         return HttpResponse(f"Erreur de requête: {str(e)}")
-
-
-
