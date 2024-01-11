@@ -7,7 +7,6 @@ and other app-specific configurations.
 """
 from django.apps import AppConfig
 
-
 class DashboardConfig(AppConfig):
     """
     Application configuration for the Dashboard app in the 'monitor' Django project.
@@ -20,3 +19,4 @@ class DashboardConfig(AppConfig):
 
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'dashboard'
+    

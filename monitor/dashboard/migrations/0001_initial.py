@@ -4,6 +4,9 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+    """
+    Database migration for the initial setup.
+    """
 
     initial = True
 
@@ -14,9 +17,17 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ServerData',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(
+                    auto_created=True, primary_key=True,
+                    serialize=False, verbose_name='ID'
+                )),
                 ('champ1', models.CharField(max_length=100)),
                 ('champ2', models.IntegerField()),
             ],
+            options={
+                "verbose_name": "Server Data",
+                "verbose_name_plural": "Server Data",
+                "doc": "Model representing data related to a server.",
+            },
         ),
     ]
