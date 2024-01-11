@@ -3,3 +3,4 @@ plotly
 pandas
 pathlib
 requests
+pylint
