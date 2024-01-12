@@ -58,7 +58,7 @@
   <div id="sidebar">
     <nav>
       <ul>
-        <a href="../pie_chart"><li>Server Status</li></a>
+        <a href="../pie_chart"><li>Server Logs</li></a>
         <a href="#server-control"><li>Server Control</li></a>
         <!-- Add more menu items as needed -->
       </ul>
@@ -73,8 +73,8 @@
     <p>Server 2: <span class="badge badge-danger">Offline</span></p>
 
     <h2>Server Control</h2>
-    <button class="btn btn-success" onclick="startServer()">Start Server</button>
-    <button class="btn btn-danger" onclick="stopServer()">Stop Server</button>
+    <button class="btn btn-success" onclick="startServer()">Add Server</button>
+    <button class="btn btn-danger" onclick="stopServer()">Delete Server</button>
   </div>
 
 </div>
@@ -86,12 +86,12 @@
 <script th:inline="javascript">
   function startServer() {
     // Add logic to start the server
-    alert('Starting server...');
+    alert("You are going to add a new server...");
   }
 
   function stopServer() {
     // Add logic to stop the server
-    alert('Stopping server...');
+    alert("You are going to delete a server...");
   }
 </script>
 
