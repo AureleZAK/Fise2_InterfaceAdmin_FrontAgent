@@ -1,6 +1,8 @@
 # Create your views here.
 # dashboard/views.py
 from django.http import HttpResponse
+
+
 from django.shortcuts import render
 from .models import ServerData
 import plotly.express as px
@@ -51,5 +53,25 @@ def pie_chart(request):
         print(f"Error in get_api_data: {str(e)}")
         return HttpResponse(f"Erreur de requête: {str(e)}")
 
+# Ajoutez cette fonction à views.py
+from django.http import JsonResponse
+
+def ram_data(request):
+    api_url = "http://lancelot.telecomste.net:8080/metrics/v1/ram"
+
+    try:
+        response = requests.get(api_url)
+        response.raise_for_status()
+        ram_data = response.json()
+
+        return JsonResponse(ram_data)  # Renvoyer les données en tant que réponse JSON
+    except requests.RequestException as e:
+        print(f"Error in ram_data: {str(e)}")
+        return JsonResponse({'error': f"Erreur de requête: {str(e)}"})  # Renvoyer une réponse JSON avec l'erreur
 
 
+from django.shortcuts import render
+
+def ram_chart(request):
+    # Logique de la vue ram_chart
+    return render(request, 'dashboard/ram_chart.html')  # Assurez-vous que le chemin du modèle est correct
