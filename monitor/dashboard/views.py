@@ -91,3 +91,16 @@ def cpu_data(request):
     except requests.RequestException as e:
         print(f"Error in cpu_data: {str(e)}")
         return JsonResponse({'error': f"Erreur de requête: {str(e)}"})  # Renvoyer une réponse JSON avec l'erreur
+
+def disk_data(request):
+    api_url = "http://lancelot.telecomste.net:8080/metrics/v1/disk/"
+
+    try:
+        response = requests.get(api_url)
+        response.raise_for_status()
+        disk_data = response.json()
+
+        return JsonResponse(disk_data)
+    except requests.RequestException as e:
+        print(f"Error in disk_data: {str(e)}")
+        return JsonResponse({'error': f"Erreur de requête: {str(e)}"})
