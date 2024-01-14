@@ -74,6 +74,6 @@ def ram_data(request):
 
 from django.shortcuts import render
 
-def ram_chart(request):
+def Dym_metrics(request):
     # Logique de la vue ram_chart
-    return render(request, 'dashboard/ram_chart.html')  # Assurez-vous que le chemin du modèle est correct
+    return render(request, 'dashboard/Dym_metrics.html')  # Assurez-vous que le chemin du modèle est correct
