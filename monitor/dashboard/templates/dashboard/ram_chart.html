@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAM Chart</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+  <style>
+    /* Custom styles from home.html */
+    body {
+      padding-top: 56px; /* Adjust for the fixed navbar */
+    }
+    #wrapper {
+      display: flex;
+    }
+    #sidebar {
+      width: 250px;
+      background-color: #F6F7F9; /* Dark background color */
+      padding: 20px;
+      position: fixed;
+      height: 100%;
+      overflow-y: auto;
+      z-index: 1;
+    }
+    #content {
+      flex: 1;
+      margin-left: 250px; /* Adjust based on the width of the sidebar */
+      padding: 20px;
+    }
+    #sidebar nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    #sidebar nav li {
+      padding: 10px;
+      background-color: #F47B68; /* Gray background color for menu items */
+      margin-bottom: 5px;
+      border-radius: 5px;
+    }
+    #sidebar nav a {
+      color: #ffffff; /* White text color for menu items */
+      text-decoration: none;
+    }
+  </style>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@0.1.1"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
+    
+  </head>
+  <body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <a class="navbar-brand" href="../home"><h2>Menu</h2></a>
+      </nav>
+      
+      <div id="wrapper">
+      
+        <!-- Sidebar -->
+        <div id="sidebar">
+          <nav>
+            <ul>
+              <a href="../pie_chart"><li style="background-color: #F33D21;">Server Status</li></a>
+              <a href="#server-control"><li>Server Control</li></a>
+              <!-- Add more menu items as needed -->
+            </ul>
+          </nav>
+        </div>
+
+<div id="content">
+    <h1>Graphique d'utilisation de la RAM</h1>
+  
+    <div style="width: 800px; height: 600px;">
+      <canvas id="ram-chart"></canvas>
+    </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var ctx = document.getElementById('ram-chart').getContext('2d');
+        var labels = [];
+        var datasetData = [];
+  
+        var ramChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'RAM Usage',
+              data: datasetData,
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1,
+              fill: false
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              x: {
+                type: 'time',
+                position: 'bottom'
+              },
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+  
+        function addData(chart, data) {
+          var now = moment();
+          labels.push(now.format('HH:mm:ss'));
+          datasetData.push(data.used / data.total * 100); // calculate used/total for each data point
+  
+          if (labels.length > 60) {
+            labels.shift();
+            datasetData.shift();
+          }
+  
+          chart.update();
+        }
+  
+        setInterval(function() {
+    $.get("/ram_data", function(data) {
+      addData(ramChart, data);
+    });
+  }, 1000);
+      });
+    </script>
+    </div>
+
+  </body>
+  </html>
+  
+  
+
+
