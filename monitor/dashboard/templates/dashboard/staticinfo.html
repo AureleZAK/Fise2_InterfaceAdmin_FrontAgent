@@ -73,6 +73,14 @@
 
         <p>Server IP: <span th:text="${serverIp}" class="badge badge-primary"></span></p>
 
+
+        <p>Nickname: <span id="hostnameDisplay" class="badge badge-primary"></span></p>
+
+        
+        <p>Hostname: <span th:text="${serverIp}" class="badge badge-primary"></span></p>
+
+        <p>State: <span th:text="${serverIp}" class="badge badge-primary"></span></p>
+
         <p>Server 1: <span class="badge badge-success">Online</span></p>
         <p>Server 2: <span class="badge badge-danger">Offline</span></p>
 
@@ -80,8 +88,16 @@
         <button class="btn btn-success" onclick="startServer()">Add Server</button>
         <button class="btn btn-danger" onclick="stopServer()">Delete Server</button>
     </div>
-
 </div>
+
+<script>
+        fetch('http://lancelot.telecomste.net:8080/metrics/v1/hostname/hostname') // Remplacez par votre point de terminaison d'API
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('hostnameDisplay').innerText = data.hostname;
+
+            }).catch(console.error('Erreur de récupération des données de l\'API:', error));
+</script>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
