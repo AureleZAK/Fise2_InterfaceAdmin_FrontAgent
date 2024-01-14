@@ -77,3 +77,17 @@ from django.shortcuts import render
 def Dym_metrics(request):
     # Logique de la vue ram_chart
     return render(request, 'dashboard/Dym_metrics.html')  # Assurez-vous que le chemin du modèle est correct
+
+
+def cpu_data(request):
+    api_url = "http://lancelot.telecomste.net:8080/metrics/v1/cpu/avg-load"
+
+    try:
+        response = requests.get(api_url)
+        response.raise_for_status()
+        cpu_data = response.json()
+
+        return JsonResponse({'load': cpu_data['avgLoad'][0]})  # Renvoyer la première valeur comme exemple
+    except requests.RequestException as e:
+        print(f"Error in cpu_data: {str(e)}")
+        return JsonResponse({'error': f"Erreur de requête: {str(e)}"})  # Renvoyer une réponse JSON avec l'erreur

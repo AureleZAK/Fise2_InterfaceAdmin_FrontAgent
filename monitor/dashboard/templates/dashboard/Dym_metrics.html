@@ -129,6 +129,65 @@
   }, 1000);
       });
     </script>
+  <h1>Graphique d'utilisation du CPU </h1>
+    
+  <div style="width: 800px; height: 600px;">
+    <canvas id="cpu-chart"></canvas>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var cpuCtx = document.getElementById('cpu-chart').getContext('2d');
+      var cpuLabels = [];
+      var cpuDatasetData = [];
+  
+      var cpuChart = new Chart(cpuCtx, {
+        type: 'line',
+        data: {
+          labels: cpuLabels,
+          datasets: [{
+            label: 'CPU AVG Load',
+            data: cpuDatasetData,
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1,
+            fill: false
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            x: {
+              type: 'time',
+              position: 'bottom'
+            },
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+  
+      function addCpuData(chart, data) {
+        var now = moment();
+        cpuLabels.push(now.format('HH:mm:ss'));
+        cpuDatasetData.push(data.load);
+  
+        if (cpuLabels.length > 60) {
+          cpuLabels.shift();
+          cpuDatasetData.shift();
+        }
+  
+        chart.update();
+      }
+  
+      setInterval(function() {
+        $.get("/cpu_data", function(data) {
+          addCpuData(cpuChart, data);
+        });
+      }, 1000);
+    });
+  </script>
+  
     </div>
 
   </body>
