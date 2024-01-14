@@ -14,6 +14,8 @@ def dashboard(request):
     data_points = ServerData.objects.all()  # Récupérez les données depuis la base de données
     return render(request, 'dashboard/dashboard.html', {'data_points': data_points})
 
+def staticinfo(request):
+    return render(request, 'dashboard/staticinfo.html')
 def home(request):
     return render(request, 'dashboard/home.html')
 def my_view(request):

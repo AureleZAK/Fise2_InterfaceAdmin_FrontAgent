@@ -1,6 +1,3 @@
-<!-- pie_chart.html -->
-<!-- src/main/resources/templates/home.html -->
-
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -8,10 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Agent</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <style>
     /* Custom styles */
     body {
       padding-top: 56px; /* Adjust for the fixed navbar */
+    }
+    h1{
+      text-align: center;
     }
     #wrapper {
       display: flex;
@@ -45,6 +46,11 @@
       color: #ffffff; /* White text color for menu items */
       text-decoration: none;
     }
+    .pie-chart {
+      width: 400px;
+      height: 300px;
+      display: block;
+    }
   </style>
 </head>
 <body>
@@ -54,48 +60,81 @@
 </nav>
 
 <div id="wrapper">
-
-  <!-- Sidebar -->
   <div id="sidebar">
     <nav>
       <ul>
-        <a href="../pie_chart"><li style="background-color: #F33D21;">Server Status</li></a>
-        <a href="#server-control"><li>Server Control</li></a>
+        <a href="../pie_chart"><li style="background-color: #F33D21;">Access Web Pages</li></a>
+        <a href="../ram_chart"><li>Server RAM Health</li></a>
+        <a href="../staticinfo"><li>Static Informations</li></a>
         <!-- Add more menu items as needed -->
       </ul>
     </nav>
   </div>
-  <!-- templates/votre_template.html -->
-    <!-- Main content -->
+  <!-- Main content -->
   <div id="content">
-    <h1>Données de l'API</h1>
+    <h1>Access Web Pages</h1>
+    <!-- Conteneur pour les graphiques à secteurs -->
+    <div id="pieChart1" class="pie-chart"></div>
 
-    {% if api_data %}
-    <ul>
-      {% for key, value in api_data.items %}
-      <li>{{ key }}: {{ value }}</li>
-      {% endfor %}
-    </ul>
-    {% else %}
-    <p>Aucune donnée disponible pour le moment.</p>
-    {% endif %}
+    <div id="pieChart2" class="pie-chart"></div>
 
-    {% block content %}
-    <div>
-      {{ graph_html|safe }}  <!-- Inclure le graphique Plotly -->
-    </div>
-    {% endblock %}
+    <!-- Script JavaScript pour les graphiques à secteurs -->
+    <!-- Script JavaScript pour les graphiques à secteurs -->
+    <script>
+      fetch('http://lancelot.telecomste.net:8080/metrics/v1/log')
+              .then(response => response.json())
+              .then(data => {
+                // Données pour le premier Pie Chart (failed et succeed)
+                const failed = data.failed || 0;
+                const succeed = data.succeed || 0;
+
+                const pieData1 = [{
+                  labels: ['Failed', 'Succeed'],
+                  values: [failed, succeed],
+                  type: 'pie',
+                  textinfo: 'percent+label',
+                  insidetextorientation: 'radial',
+                  marker: {
+                    colors: ['red', 'green']
+                  }
+                }];
+
+                const pieLayout1 = {
+                  height: 300,
+                  width: 1000,
+                  title: 'State Access (Failed/Succeed)'
+                };
+
+                Plotly.newPlot('pieChart1', pieData1, pieLayout1);
+
+                // Données pour le deuxième Pie Chart (nombre d'accès à chacune des pages)
+                const nbwebsitesData = data.nbwebsites || {};
+                const labels2 = Object.keys(nbwebsitesData);
+                const values2 = Object.values(nbwebsitesData);
+
+                // Création du deuxième Pie Chart
+                const pieData2 = [{
+                  labels: labels2,
+                  values: values2,
+                  type: 'pie',
+                  textinfo: 'percent+label',
+                  insidetextorientation: 'radial'
+                }];
+
+                const pieLayout2 = {
+                  height: 300,
+                  width: 1100,
+                  title: 'Number access for each pages'
+                };
+
+                Plotly.newPlot('pieChart2', pieData2, pieLayout2);
+              })
+              .catch(error => console.error('Erreur de récupération des données de l\'API:', error));
+    </script>
+
   </div>
 
 </div>
 
 </body>
 </html>
- <!-- Si vous avez une base, sinon ignorez cette ligne -->
-
-
-
-
-
-
-
