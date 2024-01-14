@@ -71,15 +71,15 @@
         <!-- Your content goes here -->
         <h2>Static Informations</h2>
 
-        <p>Server IP: <span th:text="${serverIp}" class="badge badge-primary"></span></p>
-
-
-        <p>Nickname: <span id="hostnameDisplay" class="badge badge-primary"></span></p>
-
+        <p>Server IP: <span id="serverIp" class="badge badge-primary"></span></p>
         
-        <p>Hostname: <span th:text="${serverIp}" class="badge badge-primary"></span></p>
+        <p>Hostname: <span id="hostnameDisplay" class="badge badge-primary"></span></p>
 
-        <p>State: <span th:text="${serverIp}" class="badge badge-primary"></span></p>
+        <p>State: <span id="statusDisplay" class="badge badge-primary"></span></p>
+
+        <p>Core number: <span id = "coreNb" class="badge badge-primary"></span></p>
+
+        <p>Core state: <span id = "coreStats" class="badge badge-primary"></span></p>
 
         <p>Server 1: <span class="badge badge-success">Online</span></p>
         <p>Server 2: <span class="badge badge-danger">Offline</span></p>
@@ -91,12 +91,59 @@
 </div>
 
 <script>
-        fetch('http://lancelot.telecomste.net:8080/metrics/v1/hostname/hostname') // Remplacez par votre point de terminaison d'API
+        fetch('http://lancelot.telecomste.net:8080/metrics/v1/hostname/hostname') 
             .then(response => response.json())
             .then(data => {
                 document.getElementById('hostnameDisplay').innerText = data.hostname;
-
             }).catch(console.error('Erreur de récupération des données de l\'API:', error));
+</script>
+
+<script>
+        fetch('http://lancelot.telecomste.net:8080/metrics/v1/ip')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('serverIp').innerText = data.ip;
+            }).catch(error => console.error('Erreur de récupération des données de l\'API:', error));
+</script>
+
+<script>
+    fetch('http://lancelot.telecomste.net:8080/health')
+        .then(response => {
+            console.log(response)
+            if (response.ok) {
+                document.getElementById('statusDisplay').innerText = 'Reachable';
+            }
+        })
+        .catch(error => {
+            console.error('Erreur de récupération des données de l\'API:', error);
+            document.getElementById('statusDisplay').innerText = 'Not Reachable';
+        });
+
+</script>
+
+
+<script>
+    fetch('http://lancelot.telecomste.net:8080/metrics/v1/cpu/usage')
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById('coreStats');
+            let htmlContent = '<ul>';
+            data.forEach(item => {
+                htmlContent += `<li>id : ${item.id}, usage : ${item.usage}</li>`;
+            });
+
+            htmlContent += '</ul>';
+            container.innerHTML = htmlContent;
+        })
+        .catch(error => console.error('Erreur de récupération des données de l\'API:', error));
+</script>
+
+<script>
+    fetch('http://lancelot.telecomste.net:8080/metrics/v1/cpu/core')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('coreNb').innerText = data.number;
+        }).catch(error => console.error('Erreur de récupération des données de l\'API:', error));
 </script>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
