@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>Tableau de bord du serveur</h1>
-<form method="post" action="{% url 'pie_chart' %}">
+<form method="post" action="{% url 'home' %}">
   {% csrf_token %}
   <button type="submit">Click Me!</button>
 </form>
