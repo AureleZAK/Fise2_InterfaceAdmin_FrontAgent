@@ -73,15 +73,21 @@
 <div id="content">
     <h1>Graphique d'utilisation de la RAM</h1>
   
-    <div style="width: 800px; height: 600px;">
-      <canvas id="ram-chart"></canvas>
+    <div style="display: flex; justify-content: space-between;">
+      <div style="width: 800px; height: 600px;">
+        <canvas id="ram-chart"></canvas>
+      </div>
+    
+      <!-- Ajoutez cela où vous souhaitez afficher les informations du RAM -->
+      <div id="ram-info"></div>
     </div>
+
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         var ctx = document.getElementById('ram-chart').getContext('2d');
         var labels = [];
         var datasetData = [];
-  
+        
         var ramChart = new Chart(ctx, {
           type: 'line',
           data: {
@@ -108,7 +114,10 @@
             }
           }
         });
-  
+        function bytesToGigabytes(bytes) {
+          return (bytes / (1024 * 1024 * 1024)).toFixed(2);
+        }
+
         function addData(chart, data) {
           var now = moment();
           labels.push(now.format('HH:mm:ss'));
@@ -120,6 +129,8 @@
           }
   
           chart.update();
+          $('#ram-info').text(`Used: ${bytesToGigabytes(data.used)} Go | Total: ${bytesToGigabytes(data.total)} Go`);
+          
         }
   
         setInterval(function() {
@@ -131,8 +142,14 @@
     </script>
   <h1>Graphique d'utilisation du CPU </h1>
     
-  <div style="width: 800px; height: 600px;">
-    <canvas id="cpu-chart"></canvas>
+  <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+    <!-- Graphique du CPU -->
+    <div style="width: 800px; height: 600px;">
+      <canvas id="cpu-chart"></canvas>
+    </div>
+  
+    <!-- Informations de l'average load -->
+    <div id="cpu-info"></div>
   </div>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -178,6 +195,8 @@
         }
   
         chart.update();
+        $('#cpu-info').text(`Average Load: ${data.load.toFixed(2)}%`);
+
       }
   
       setInterval(function() {
