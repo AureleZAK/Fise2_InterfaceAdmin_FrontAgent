@@ -248,7 +248,7 @@
           }
 
           setInterval(function() {
-            $.get("/processes", function(data) {
+            $.get("/top_processes_data", function(data) {
               addTopProcessesData(data);
             });
           }, 1000);
