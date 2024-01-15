@@ -104,3 +104,16 @@ def disk_data(request):
     except requests.RequestException as e:
         print(f"Error in disk_data: {str(e)}")
         return JsonResponse({'error': f"Erreur de requête: {str(e)}"})
+
+def top_processes_data(request):
+    api_url = "http://lancelot.telecomste.net:8080/metrics/v1/processes"
+
+    try:
+        response = requests.get(api_url)
+        response.raise_for_status()
+        top_processes_data = response.json()
+        
+        return JsonResponse(top_processes_data)
+    except requests.RequestException as e:
+        print(f"Error in disk_data: {str(e)}")
+        return JsonResponse({'error': f"Erreur de requête: {str(e)}"})

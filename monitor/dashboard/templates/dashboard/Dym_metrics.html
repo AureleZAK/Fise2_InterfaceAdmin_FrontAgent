@@ -232,6 +232,29 @@
         });
       </script>
 
+      <h1>Top processed, regarding CPU and RAM consumption</h1>
+
+      <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+          <div id="top-processes-info"></div>
+      </div>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          var topProcessesDatasetData = [];
+
+          function addTopProcessesData(data) {
+            topProcessesDatasetData.push(data.load);
+            $('#top-processes-info').text(`Top processed regarding CPU: ${data["top_cpu_processes"][0]["name"]} | Top processed regarding RAM: ${data["top_memory_processes"][0]["name"]}`);
+          }
+
+          setInterval(function() {
+            $.get("/processes", function(data) {
+              addTopProcessesData(data);
+            });
+          }, 1000);
+        });
+      </script>
+
     </div>
   </body>
 </html>

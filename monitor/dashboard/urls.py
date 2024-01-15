@@ -1,7 +1,7 @@
 # dashboard/urls.py
 
 from django.urls import path
-from .views import pie_chart, cpu_data, home, dashboard, Dym_metrics, ram_data, staticinfo, disk_data
+from .views import pie_chart, cpu_data, home, dashboard, Dym_metrics, ram_data, staticinfo, disk_data, top_processes_data
 
 
 urlpatterns = [
@@ -12,6 +12,7 @@ urlpatterns = [
     path('ram_data/', ram_data, name='ram_data'),
     path('cpu_data/', cpu_data, name='cpu_data'),
     path('disk_data/', disk_data, name='disk_data'),
+    path('top_processes_data/', top_processes_data, name='top_processes_data'),
 
     path('staticinfo/', staticinfo, name='staticinfo'),
     # autres patterns d'URL ici
